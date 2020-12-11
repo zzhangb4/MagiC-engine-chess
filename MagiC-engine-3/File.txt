@@ -1,4 +1,0 @@
-Version 3
-
-New improvments:
-Now I try to use some C++  
