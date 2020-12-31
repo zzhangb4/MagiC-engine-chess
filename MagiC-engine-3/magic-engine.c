@@ -1,4 +1,4 @@
-// MagiC-engine.c
+// MagiC.c
 
 #include "stdio.h"
 #include "defs.h"
@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     	}
     }
 
-	printf("Welcome to MagiC-engine! Type 'MagiC-engine' for console mode...\n");
+	printf("Welcome to MagiC-engine 3.0! Type 'MagiC' for console mode...\n");
 
 	char line[256];
 	while (TRUE) {
@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
 			XBoard_Loop(pos, info);
 			if(info->quit == TRUE) break;
 			continue;
-		} else if (!strncmp(line, "MagiC-engine",4))	{
+		} else if (!strncmp(line, "MagiC",4))	{
 			Console_Loop(pos, info);
 			if(info->quit == TRUE) break;
 			continue;
