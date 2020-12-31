@@ -3,13 +3,23 @@
 #include "stdio.h"
 #include "defs.h"
 
+// types of pawns:
 const int PawnIsolated = -10;
-const int PawnPassed[8] = { 0, 5, 10, 20, 35, 60, 100, 200 }; // Add pawn types
+const int PawnPassed[8] = { 0, 5, 10, 20, 35, 60, 100, 200 };
+
+// Rook bonus
 const int RookOpenFile = 10;
 const int RookSemiOpenFile = 5;
+
+// Queen bonus
 const int QueenOpenFile = 5;
 const int QueenSemiOpenFile = 3;
+
+// Misc bonus
 const int BishopPair = 30;
+// const int AdvancedKing
+// const int Knight Pair?!?
+// const int RookPair
 
 const int PawnTable[64] = {
 0	,	0	,	0	,	0	,	0	,	0	,	0	,	0	,
@@ -55,7 +65,7 @@ const int RookTable[64] = {
 0	,	0	,	5	,	10	,	10	,	5	,	0	,	0
 };
 
-const int KingE[64] = {
+const int KingEndgame[64] = {
 	-50	,	-10	,	0	,	0	,	0	,	0	,	-10	,	-50	,
 	-10,	0	,	10	,	10	,	10	,	10	,	0	,	-10	,
 	0	,	10	,	20	,	20	,	20	,	20	,	10	,	0	,
@@ -66,7 +76,7 @@ const int KingE[64] = {
 	-50	,	-10	,	0	,	0	,	0	,	0	,	-10	,	-50
 };
 
-const int KingO[64] = {
+const int KingMiddlegame[64] = {
 	0	,	5	,	5	,	-10	,	-10	,	0	,	10	,	5	,
 	-30	,	-30	,	-30	,	-30	,	-30	,	-30	,	-30	,	-30	,
 	-50	,	-50	,	-50	,	-50	,	-50	,	-50	,	-50	,	-50	,
@@ -76,8 +86,7 @@ const int KingO[64] = {
 	-70	,	-70	,	-70	,	-70	,	-70	,	-70	,	-70	,	-70	,
 	-70	,	-70	,	-70	,	-70	,	-70	,	-70	,	-70	,	-70
 };
-// sjeng 11.2
-//8/6R1/2k5/6P1/8/8/4nP2/6K1 w - - 1 41
+
 static int MaterialDraw(const S_BOARD *pos) {
 
 	ASSERT(CheckBoard(pos));
@@ -102,7 +111,7 @@ static int MaterialDraw(const S_BOARD *pos) {
   return FALSE;
 }
 
-#define ENDGAME_MAT (1 * PieceVal[wR] + 2 * PieceVal[wN] + 2 * PieceVal[wP] + PieceVal[wK])
+#define ENDGAME_MATERIAL (1 * PieceVal[wR] + 2 * PieceVal[wN] + 2 * PieceVal[wP] + PieceVal[wK])
 
 int EvalPosition(S_BOARD *pos) {
 
@@ -124,6 +133,7 @@ int EvalPosition(S_BOARD *pos) {
 		ASSERT(SQ64(sq)>=0 && SQ64(sq)<=63);
 		score += PawnTable[SQ64(sq)];
 
+		
 		if( (IsolatedMask[SQ64(sq)] & pos->pawns[WHITE]) == 0) {
 			//printf("wP Iso:%s\n",PrSq(sq));
 			score += PawnIsolated;
@@ -248,9 +258,9 @@ int EvalPosition(S_BOARD *pos) {
 	ASSERT(SQ64(sq)>=0 && SQ64(sq)<=63);
 
 	if( (pos->material[BLACK] <= ENDGAME_MAT) ) {
-		score += KingE[SQ64(sq)];
+		score += KingEndgame[SQ64(sq)];
 	} else {
-		score += KingO[SQ64(sq)];
+		score += KingMiddlegame[SQ64(sq)];
 	}
 
 	pce = bK;
@@ -259,13 +269,15 @@ int EvalPosition(S_BOARD *pos) {
 	ASSERT(MIRROR64(SQ64(sq))>=0 && MIRROR64(SQ64(sq))<=63);
 
 	if( (pos->material[WHITE] <= ENDGAME_MAT) ) {
-		score -= KingE[MIRROR64(SQ64(sq))];
+		score -= KingEndgame[MIRROR64(SQ64(sq))];
 	} else {
-		score -= KingO[MIRROR64(SQ64(sq))];
+		score -= KingMiddlegame[MIRROR64(SQ64(sq))];
 	}
 
 	if(pos->pceNum[wB] >= 2) score += BishopPair;
 	if(pos->pceNum[bB] >= 2) score -= BishopPair;
+	//if(pos->pceNum[wR] >= 2) score += RookPair;
+	//if(pos->pceNum[bR] >= 2) score -= RookPair;
 
 	if(pos->side == WHITE) {
 		return score;
