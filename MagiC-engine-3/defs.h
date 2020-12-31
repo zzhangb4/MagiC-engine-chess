@@ -272,7 +272,7 @@ extern int MoveListOk(const S_MOVELIST *list,  const S_BOARD *pos);
 extern void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list);
 extern void GenerateAllCaps(const S_BOARD *pos, S_MOVELIST *list);
 extern int MoveExists(S_BOARD *pos, const int move);
-extern void InitMvLa();
+extern void InitMvvLva();
 
 // makemove.c
 extern int MakeMove(S_BOARD *pos, int move);
